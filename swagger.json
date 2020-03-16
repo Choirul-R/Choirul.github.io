@@ -1,0 +1,1273 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Greeting from Team D! This is our 2nd mini project, to create something like imdb. Our team consist of Bianca, Choi, Earnest, Faid, and Ricky.",
+    "version": "1.0.0",
+    "title": "IMDB KW",
+    "contact": {
+      "email": "choirul.rahmaditya@mail.ugm.ac.id"
+    }
+  },
+  "host": "",
+  "basePath": "\/api/v1/",
+  "tags": [
+    {
+      "name": "User Collection",
+      "description": "Everything about Users"
+    },
+    {
+      "name": "Movie Collection",
+      "description": "Everything about Movies. Only admin can use these features"
+    },
+    {
+      "name": "Review Collection",
+      "description": "Everything about Reviews. Must login first before using these features"
+    }
+  ],
+  "paths": {
+    "\/users": {
+      "put": {
+        "tags": [
+          "User Collection"
+        ],
+        "summary": "User login, it generate JWT Token for existing user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "test01@mail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "123456"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully logged in",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "string",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Your credentials is not valid",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "errors": {
+                  "type": "string",
+                  "example": "Password or email is wrong"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "User Collection"
+        ],
+        "summary": "Register new user and generate token",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fullname": {
+                  "type": "string",
+                  "example": "Test 01"
+                },
+                "username": {
+                  "type": "string",
+                  "example": "test01"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "test01@mail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "123456"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Register successful",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "_id": "_id user",
+                    "fullname": "fullname user",
+                    "username": "username user",
+                    "email": "email user",
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Register failed"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "User Collection"
+        ],
+        "summary": "Show the current user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Should be filled with token generated by login or register",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Show successful",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "_id": "_id user",
+                    "fullname": "fullname user",
+                    "username": "username user",
+                    "email": "email user"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failed to show current user"
+          }
+        }
+      }
+    },
+    "\/users/uploadPhoto": {
+      "put": {
+        "tags": [
+          "User Collection"
+        ],
+        "summary": "Update user's photo profile",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "image",
+            "description": "Should be filled with an image file",
+            "required": true,
+            "type": "file"
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Should be filled with token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Upload photo successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "string",
+                  "example": "https://ik.imagekit.io/choi/basicToDo_a7VaS1_Ye.jpg"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failed to upload photo"
+          }
+        }
+      }
+    },
+    "\/users/update": {
+      "put": {
+        "tags": [
+          "User Collection"
+        ],
+        "summary": "Update current user's profile data",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Should be filled with token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "type": "object",
+            "example": {
+              "fullname": "Test 02",
+              "username": "test02",
+              "password": "654321"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "fullname": "Test 02",
+                    "username": "test02",
+                    "password": "654321"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failed to update (tried to change email or incorrect format)"
+          }
+        }
+      }
+    },
+    "\/movies": {
+      "post": {
+        "tags": [
+          "Movie Collection"
+        ],
+        "summary": "Create a movie entry",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Should be filled with token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "type": "object",
+            "example": {
+              "title": "SpongeBob",
+              "category": "Anime"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created a movie entry",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "rater": [],
+                    "rating": [],
+                    "_id": "5e5c7e3e295e013defc3155a",
+                    "admin": "5e5a0aece7462122c335e355",
+                    "title": "SpongeBob",
+                    "category": "Anime",
+                    "__v": 0
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failed to create a movie entry"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Movie Collection"
+        ],
+        "summary": "Show movies (all or filtered, just say so in query)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "category",
+            "description": "Show movies based on selected category",
+            "type": "string",
+            "example": "Real"
+          },
+          {
+            "in": "query",
+            "name": "movie",
+            "description": "Show movies based on searched movie",
+            "type": "string",
+            "example": "spongebob"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Movies can only be listed up to 10, so page navigation is necessary",
+            "type": "number",
+            "default": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Here you go, it's the movie(s) you're searching for",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "docs": [
+                      {
+                        "rater": [],
+                        "rating": [],
+                        "_id": "5e5b43d7ffc3275e0396de8e",
+                        "admin": "5e5a0aece7462122c335e355",
+                        "title": "SpongeBob",
+                        "category": "Anime",
+                        "__v": 6,
+                        "overall_rating": 0
+                      }
+                    ],
+                    "totalDocs": 1,
+                    "limit": 10,
+                    "totalPages": 1,
+                    "page": 1,
+                    "pagingCounter": 1,
+                    "hasPrevPage": false,
+                    "hasNextPage": false,
+                    "prevPage": null,
+                    "nextPage": null
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failed to show movies (it's unlikely, but who knows?)"
+          }
+        }
+      }
+    },
+    "\/movies/show/{_id}": {
+      "get": {
+        "tags": [
+          "Movie Collection"
+        ],
+        "summary": "Show a certain movie",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "_id",
+            "description": "Insert the movie's _id here",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully show a certain movie",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "rater": [],
+                    "rating": [],
+                    "_id": "5e5b43d7ffc3275e0396de8e",
+                    "admin": "5e5a0aece7462122c335e355",
+                    "title": "SpongeBob",
+                    "category": "Anime",
+                    "overall_rating": 0
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Failed to show a certain movie (Wrong id?)"
+          }
+        }
+      }
+    },
+    "\/movies/update/:_id": {
+      "put": {
+        "tags": [
+          "Movie Collection"
+        ],
+        "summary": "Update a movie entry",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Should be filled with token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "_id",
+            "description": "Insert the movie's _id here",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "type": "object",
+            "example": {
+              "synopsis": "Follow the sponge who live under the sea",
+              "director": "Stephen Hillenburg"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated a movie entry",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "admin": "user(admin) _id",
+                    "title": "SpongeBob",
+                    "category": "Anime"
+                  }
+                },
+                "changes": {
+                  "type": "object",
+                  "example": {
+                    "synopsis": "Follow the sponge who live under the sea",
+                    "director": "Stephen Hillenburg"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failed to update a movie entry"
+          }
+        }
+      }
+    },
+    "\/movies/favorite/{_id}": {
+      "get": {
+        "tags": [
+          "Movie Collection"
+        ],
+        "summary": "Enlist the movie to favorite, up of 3 movies",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Should be filled with token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "_id",
+            "description": "Insert the movie's _id here",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "This movie is now your favorite",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "sharedReview": [
+                      "5e5c85bddc91895313c02077"
+                    ],
+                    "favorite": [
+                      {
+                        "_id": "5e5b43d7ffc3275e0396de8e",
+                        "title": "SpongeBob"
+                      }
+                    ],
+                    "_id": "5e5a0aece7462122c335e355",
+                    "fullname": "Choirul R",
+                    "username": "choi-r",
+                    "email": "rahmadityac@gmail.com",
+                    "isAdmin": false,
+                    "password": "$2b$10$gPIDZc0UU1h3lTrAuNufEe.umiL3sXb7RtBuTid/9VJOUr7OVTAGu",
+                    "__v": 18,
+                    "image": "https://ik.imagekit.io/choi/IMG-1582959628025_ygbtLb2jZ"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failed to mark as favorite (mismatch id?)"
+          }
+        }
+      }
+    },
+    "\/movies/delete/{_id}": {
+      "delete": {
+        "tags": [
+          "Movie Collection"
+        ],
+        "summary": "Delete a movie entry",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Should be filled with token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "_id",
+            "description": "Insert the movie's _id here",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted a movie entry",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "admin": "user(admin) _id",
+                    "title": "SpongeBob",
+                    "synopsis": "Follow the sponge who live under the sea",
+                    "director": "Stephen Hillenburg",
+                    "category": "Anime"
+                  }
+                },
+                "message": {
+                  "type": "string",
+                  "example": "This movie has been deleted"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failed to delete a movie entry"
+          }
+        }
+      }
+    },
+    "\/movies/uploadPhoto/{_id}": {
+      "put": {
+        "tags": [
+          "Movie Collection"
+        ],
+        "summary": "Upload a movie's poster",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Should be filled with token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "_id",
+            "description": "Insert the movie's _id here",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "formData",
+            "name": "image",
+            "description": "Upload the movie's poster here",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully uploaded a movie's poster",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "rater": [],
+                    "rating": [],
+                    "_id": "5e5b43d7ffc3275e0396de8e",
+                    "admin": "5e5a0aece7462122c335e355",
+                    "title": "SpongeBob",
+                    "category": "Anime",
+                    "overall_rating": 0
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failed to upload a movie poster"
+          }
+        }
+      }
+    },
+    "\/reviews": {
+      "get": {
+        "tags": [
+          "Review Collection"
+        ],
+        "summary": "Show reviews (all or filtered, just say so in query)",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "category",
+            "description": "Show reviews based on category",
+            "type": "string",
+            "example": "Anime"
+          },
+          {
+            "in": "query",
+            "name": "movie",
+            "description": "Show reviews based on searched movie title",
+            "type": "string",
+            "example": "sponge"
+          },
+          {
+            "in": "query",
+            "name": "_id",
+            "description": "Show reviews based on user's id",
+            "type": "string",
+            "example": "5e5a0aece7462122c335e355"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Reviews can only be listed up to 10, so page navigation is necessary",
+            "type": "number",
+            "default": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully created a review",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "docs": [
+                      {
+                        "_id": "5e5c7ee2c1abb53e85e1aebc",
+                        "owner": "5e5a0aece7462122c335e355",
+                        "movie": "SpongeBob",
+                        "review": "Superb!",
+                        "rating": 5,
+                        "category": "Anime",
+                        "__v": 0
+                      }
+                    ],
+                    "totalDocs": 1,
+                    "limit": 10,
+                    "totalPages": 1,
+                    "page": 1,
+                    "pagingCounter": 1,
+                    "hasPrevPage": false,
+                    "hasNextPage": false,
+                    "prevPage": null,
+                    "nextPage": null
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failed to show reviews (it's unlikely, but who knows?)"
+          }
+        }
+      }
+    },
+    "\/reviews/{_id}": {
+       "post": {
+        "tags": [
+          "Review Collection"
+        ],
+        "summary": "Create a review",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Should be filled with token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "_id",
+            "description": "Should be filled movie's id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Insert movie title, review, and/or rating",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "movie": {
+                  "type": "string",
+                  "example": "SpongeBob"
+                },
+                "review": {
+                  "type": "string",
+                  "example": "Superb!"
+                },
+                "rating": {
+                  "type": "number",
+                  "example": 5
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully created a review",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "_id": "5e5c7ee2c1abb53e85e1aebc",
+                    "owner": "5e5a0aece7462122c335e355",
+                    "movie": "SpongeBob",
+                    "review": "Superb!",
+                    "rating": 5,
+                    "category": "Anime",
+                    "__v": 0
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failed to create a review"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Review Collection"
+        ],
+        "summary": "Edit a review",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Should be filled with token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "_id",
+            "description": "Insert the review's _id here",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Edit your review or rating",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "review": {
+                  "type": "string",
+                  "example": "It's ok"
+                },
+                "rating": {
+                  "type": "number",
+                  "example": 3
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated your review or rating",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "changes": {
+                      "review": "It's ok",
+                      "rating": 3
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failed to edit the review"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Review Collection"
+        ],
+        "summary": "Delete a review",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Should be filled with token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "_id",
+            "description": "Insert the review's _id here",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted a review",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "data": {
+                      "_id": "5e5c7ee2c1abb53e85e1aebc",
+                      "owner": "5e5a0aece7462122c335e355",
+                      "movie": "SpongeBob",
+                      "review": "It's ok",
+                      "rating": 3,
+                      "category": "Anime",
+                      "__v": 0
+                    },
+                    "message": "Review removed"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failed to delete the review"
+          }
+        }
+      }
+    },
+    "\/reviews/share/{_id}": {
+      "get": {
+        "tags": [
+          "Review Collection"
+        ],
+        "summary": "Share a review to user's profile",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Should be filled with token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "_id",
+            "description": "Insert the review's _id here",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully shared a review",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "data": {
+                  "type": "object",
+                  "example": {
+                    "sharedReview": [
+                      "5e5c85bddc91895313c02077"
+                    ],
+                    "_id": "5e5a0aece7462122c335e355",
+                    "fullname": "Test 01",
+                    "username": "Test01",
+                    "email": "test01@mail.com",
+                    "isAdmin": false,
+                    "password": "$2b$10$gPIDZc0UU1h3lTrAuNufEe.umiL3sXb7RtBuTid/9VJOUr7OVTAGu",
+                    "__v": 1,
+                    "image": "https://ik.imagekit.io/choi/IMG-1582959628025_ygbtLb2jZ"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failed to share a review"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Authorization": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "required": [
+        "fullname",
+        "username",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "example": "5e5a0aece7462122c335e355"
+        },
+        "fullname": {
+          "type": "string",
+          "example": "Test 01"
+        },
+        "username": {
+          "type": "string",
+          "example": "Test01"
+        },
+        "image": {
+          "type": "string",
+          "example": "https://ik.imagekit.io/choi/basicToDo_a7VaS1_Ye.jpg"
+        },
+        "email": {
+          "type": "string",
+          "example": "test01@mail.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "123456"
+        },
+        "isAdmin": {
+          "type": "boolean",
+          "default": false
+        },
+        "favorite": {
+          "type": "array",
+          "example": [{
+            "_id": "5e5b43d7ffc3275e0396de8e",
+            "title": "SpongeBob"
+        }]
+        },
+        "sharedReview": {
+          "type": "array",
+          "example": ["5e5c85bddc91895313c02077"]
+        }
+      }
+    },
+    "Movie": {
+      "type": "object",
+      "required": [
+        "admin",
+        "category",
+        "rating",
+        "overall_rating"
+      ],
+      "properties": {
+        "admin": {
+          "type": "string",
+          "example": "_id"
+        },
+        "title": {
+          "type": "string",
+          "example": "SpongeBob SquarePants"
+        },
+        "image": {
+          "type": "string",
+          "example": "https://ik.imagekit.io/choi/basicToDo_a7VaS1_Ye.jpg"
+        },
+        "category": {
+          "type": "string",
+          "example": "real, anime"
+        },
+        "rating": {
+          "type": "array",
+          "example": [
+            5,
+            3,
+            4,
+            4,
+            1,
+            2
+          ]
+        },
+        "overall_rating": {
+          "type": "number",
+          "example": 4.3
+        }
+      }
+    },
+    "Review": {
+      "type": "object",
+      "required": [
+        "owner",
+        "movie",
+        "rating"
+      ],
+      "properties": {
+        "owner": {
+          "type": "string",
+          "example": "_id user"
+        },
+        "movie": {
+          "type": "string",
+          "example": "_id movie"
+        },
+        "review": {
+          "type": "string",
+          "example": "Looks good to me!"
+        },
+        "rating": {
+          "type": "number",
+          "example": 3
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Backend Repository",
+    "url": "https://gitlab.com/Choi-R/yangkerengitunapa"
+  }
+}
